@@ -50,7 +50,7 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.json("http://localhost:6669/?q=%23ratp", function(error, jsondata) {
+d3.json("http://varan.komodo.de:6669/?q=%23ratp&l=3000", function(error, jsondata) {
 
   var timestamps = jsondata['timestamps'];
 

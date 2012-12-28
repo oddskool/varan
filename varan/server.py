@@ -12,7 +12,6 @@ from varan import logger, VERSION
 from varan.ts_store import TSStore
 from varan.monitor import Monitor
 from cyclone.web import StaticFileHandler
-import os
 
 class DefaultHandler(cyclone.web.RequestHandler):
     def initialize(self, store):
@@ -41,22 +40,26 @@ class Application(cyclone.web.Application):
         cyclone.web.Application.__init__(self,
                                          handlers)
     def log_request(self, handler):
-        logger.info('HTTP %s %s %s %s',
+        request_time = 1000.0 * handler.request.request_time()
+        logger.info('HTTP %s %s %s %s (%.2f ms)',
                     handler.request.method,
                     handler.request.uri,
                     handler.request.headers,
-                    handler.request.remote_ip)
+                    handler.request.remote_ip,
+                    request_time)
 
 if __name__ == '__main__':
     logger.info('-'*20+' varan v.%s '%VERSION+'-'*20)
     store = TSStore()
-    monitor = Monitor(['#ratp', 
+    monitor = Monitor([
+                       '#ratp', 
                        '#velib', 
                        '#rerA', 
                        '#rerB', 
                        '#rerC', 
                        '#rerD', 
-                       '#rerE'], 
+                       '#rerE'
+                      ], 
                       store)
     monitor_task = LoopingCall(monitor)
     monitor_task.start(30)

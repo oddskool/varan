@@ -70,6 +70,7 @@ class TSStore(object):
             if initial_timestamp - timestamp > max_age:
                 break
             timestamp -= self._delta_secs 
+        timestamps.reverse()
         return { 'timestamps': [ { 'timestamp':ts,
                                     'tweet_count':len(tweet_ids[ts]),
                                    'label': time.strftime("%a, %d %b %H:%M:%S",
