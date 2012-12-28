@@ -76,6 +76,7 @@ class TSStore(object):
                                                           time.localtime(ts))
                                   } for ts in timestamps ],
                  'query_timestamp' : initial_timestamp,
+                 'n_results' : sum([ len(t) for t in tweet_ids.itervalues()]),
                  'tweets' : tweet_ids }
 
 
