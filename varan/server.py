@@ -26,9 +26,6 @@ class DefaultHandler(cyclone.web.RequestHandler):
         query = self.get_argument('q','#ratp')
         limit = int(self.get_argument('l','20'))
         results = self.store.retrieve(query, limit)
-        timestamps = [ r[0] for r in results ]
-        results = dict(results)
-        results['timestamps'] = timestamps
         self.write(results)
 
 class Application(cyclone.web.Application):
@@ -39,6 +36,12 @@ class Application(cyclone.web.Application):
             ]
         cyclone.web.Application.__init__(self,
                                          handlers)
+    def log_request(self, handler):
+        logger.info('HTTP %s %s %s %s',
+                    handler.request.method,
+                    handler.request.uri,
+                    handler.request.headers,
+                    handler.request.remote_ip)
 
 if __name__ == '__main__':
     logger.info('-'*20+' varan v.%s '%VERSION+'-'*20)

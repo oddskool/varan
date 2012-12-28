@@ -1,24 +1,31 @@
-varan : Realtime, Scalable Twitter Monitoring
+varan : realtime twitter monitoring
 ==========
 
 Purpose
 -------
 
-varan is a python package performs real time monitoring of twitter
+varan is a python server performing real time monitoring of twitter
 
 Features
 --------
-* python library
-* very fast (R/W) storage ; relies upon [redis](http://redis.io)
-* very fast web service ; relies upon [cyclone](http://cyclone.io)
+* realtime monitoring of a configured number of twitter entities (e.g. hashtags)
+* configurable "realtime" meaning (up to the second for indexing, think 1 digit milliseconds for querying)
+* python library & server
+* very fast storage based on [redis](http://redis.io)
+* very fast web service based on [cyclone](http://cyclone.io)
 
 Stability
 ---------
 
-varan is alpha release as of now. 
+varan is alpha as of now. 
+
+License
+-------
+
+MIT
 
 Name
 ----
 
-see https://en.wikipedia.org/wiki/Monitor_lizard
+varan is another name for [monitor lizard](https://en.wikipedia.org/wiki/Monitor_lizard)
 

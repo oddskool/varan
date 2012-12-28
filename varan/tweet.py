@@ -39,10 +39,12 @@ class Tweet(object):
                      data['timestamp'],
                      data['hashtags'],
                      data['geo'])
+    def todict(self):
+        return {'id':self.id,
+                'text':self.text,
+                'user_id':self.user_id,
+                'timestamp':self.timestamp,
+                'hashtags':self.hashtags,
+                'geo':self.geo}
     def serialize(self):
-        return json.dumps({'id':self.id,
-                           'text':self.text,
-                           'user_id':self.user_id,
-                           'timestamp':self.timestamp,
-                           'hashtags':self.hashtags,
-                           'geo':self.geo})
+        return json.dumps(self.todict())

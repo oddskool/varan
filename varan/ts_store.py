@@ -5,6 +5,7 @@ Created on 27 dec. 2012
 '''
 from redis.client import Redis
 import time
+from varan.tweet import Tweet
 
 class TSStore(object):
 
@@ -18,8 +19,10 @@ class TSStore(object):
     def _ts_key(self, timestamp, query):
         return 'ts:%(query)s:%(timestamp_key)s'%{'query':query,
                                                  'timestamp_key':self._interval_key(timestamp)}
-    def _tweet_key(self, tweet):
-        return 'tweet:%s'%tweet.id
+    def _tweet_key(self, t):
+        if type(t) == Tweet:
+            return 'tweet:%s'%t.id
+        return 'tweet:%s'%t
     def _query_key(self, query):
         return 'query:%s:last_tweet_id'%query
 
@@ -44,21 +47,37 @@ class TSStore(object):
 
     def retrieve_ts(self, query, timestamp, n_elements):
         ts_key = self._ts_key(timestamp, query)
-        print "LRANGE", ts_key
+        #print "LRANGE", ts_key
         return self._redis.lrange(ts_key, 0, n_elements)
     def retrieve_last_tweet_id(self, query):
         query_key = self._query_key(query)
         return self._redis.get(query_key)
+    def retrieve_tweet(self, tweet_id):
+        tweet_key = self._tweet_key(tweet_id)
+        data = self._redis.get(tweet_key)
+        return Tweet.deserialize(data).todict()
     def retrieve(self, query, n_elements=30, max_age=60*60*12):
         timestamp = initial_timestamp = int(time.time())
-        print "initial_timestamp", initial_timestamp
-        result = []
-        while sum([ len(e[1]) for e in result ]) <= n_elements:
-            data = self.retrieve_ts(query, timestamp, n_elements)
-            if len(data):
-                result.insert(0, (timestamp,data))
-            print "current", timestamp, "<?>", timestamp - initial_timestamp
+        #print "initial_timestamp", initial_timestamp
+        timestamps = []
+        tweet_ids = {}
+        while sum([ len(v) for v in tweet_ids.itervalues() ]) <= n_elements:
+            current_tweet_ids = self.retrieve_ts(query, timestamp, n_elements)
+            if len(current_tweet_ids):
+                timestamps.insert(0, timestamp)
+                tweet_ids[timestamp] = [ {'id':tid,'value':self.retrieve_tweet(tid)} for tid in current_tweet_ids ]
+            #print "current", timestamp, "<?>", timestamp - initial_timestamp
             if initial_timestamp - timestamp > max_age:
                 break
             timestamp -= self._delta_secs 
-        return result
+        return { 'timestamps': [ { 'timestamp':ts,
+                                    'tweet_count':len(tweet_ids[ts]),
+                                   'label': time.strftime("%a, %d %b %H:%M:%S",
+                                                          time.localtime(ts))
+                                  } for ts in timestamps ],
+                 'query_timestamp' : initial_timestamp,
+                 'tweets' : tweet_ids }
+
+
+
+
