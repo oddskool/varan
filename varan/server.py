@@ -11,6 +11,8 @@ import cyclone.web
 from varan import logger, VERSION
 from varan.ts_store import TSStore
 from varan.monitor import Monitor
+from cyclone.web import StaticFileHandler
+import os
 
 class DefaultHandler(cyclone.web.RequestHandler):
     def initialize(self, store):
@@ -33,6 +35,8 @@ class Application(cyclone.web.Application):
         self.store = store
         handlers = [
                     (r"/", DefaultHandler, {'store':self.store}),
+                    (r"/web/(.*)", StaticFileHandler, {"path": 
+                                                       "web"}),
             ]
         cyclone.web.Application.__init__(self,
                                          handlers)
