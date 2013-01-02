@@ -53,11 +53,11 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.json("/?q=%23ratp&l=30", function(error, jsondata) {
+d3.json("/?q=%23ratp&l=20", function(error, jsondata) {
 
   var ts_data = jsondata['ts'];
 
-  x.domain(ts_data.map(function(d) { return d.timestamp_label.substr(12,15); }));
+  x.domain(ts_data.map(function(d) { return d.timestamp_label.substr(12,5); }));
   y.domain([0, d3.max(ts_data, function(d) { return d.tweets.length; })]);
 
   svg.append("g")
@@ -79,7 +79,7 @@ d3.json("/?q=%23ratp&l=30", function(error, jsondata) {
       .data(ts_data)
      .enter().append("rect")
       .attr("class", "bar")
-      .attr("x", function(d) { return x(d.timestamp_label.substr(12,15)); })
+      .attr("x", function(d) { return x(d.timestamp_label.substr(12,5)); })
       .attr("width", x.rangeBand())
       .attr("y", function(d) { return y(d.tweets.length); })
       .attr("height", function(d) { return height - y(d.tweets.length); })
