@@ -8,6 +8,9 @@ Features
 * variable delta range based queries
 * (cyclone-) templatizing of D3 demo
 
+Technical
+---------
+* use tx_redis
 
 Packaging
 -------
