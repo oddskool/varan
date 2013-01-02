@@ -77,6 +77,7 @@ d3.json("/?q=%23ratp&l=20", function(error, jsondata) {
 
     var tags = new Array();
     var tags_count = {};
+    var tags_count_sum = 0.0;
     var w = 0;
     for(var i = 0; i < ts_data.length; i++){
       var tweets = ts_data[i].tweets;
@@ -84,20 +85,24 @@ d3.json("/?q=%23ratp&l=20", function(error, jsondata) {
         var hashtags = tweets[t].hashtags;
         for(var h = 0; h < hashtags.length; h++) {
           ht = "#"+hashtags[h].toLowerCase();
-          if(tags_count.hasOwnProperty()){
-            tags_count[ht] += 1;
-            continue;
+          if(tags_count.hasOwnProperty(ht)){
+            tags_count[ht] = tags_count[ht]+1;
+            tags_count_sum += 1;
           }
-          tags[w] = ht;
-          tags_count[ht] = 1;
-          w += 1;
+          else {
+            tags_count[ht] = 1;
+            tags_count_sum += 1;
+            tags[w] = ht;
+            w += 1;
+          }
         }
       }
     }
+    console.log(tags);
 
     d3.layout.cloud().size([300, 300])
-        .words(tags.map(function(d) {
-          return {text: d, size: 10 + tags_count[d] * 90};
+        .words(tags.map(function(t) {
+          return {text: t, size: 10 + (tags_count[t]/tags_count_sum) * 90};
         }))
         .rotate(function() { return ~~(Math.random() * 2) * 90; })
         .font("Impact")
