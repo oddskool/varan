@@ -81,9 +81,7 @@ class TSStore(object):
         tweets = []
         while current_timestamp > start_timestamp:
             current_tweet_ids = self.retrieve_ts(query, current_timestamp)
-            tweets.append({ 'timestamp': current_timestamp,
-                           'timestamp_label':  time.strftime("%a, %d %b %H:%M:%S",
-                                                             time.localtime(current_timestamp)),
+            tweets.append({'timestamp': current_timestamp,
                            'tweets' : [ self.retrieve_tweet(tid) for tid in current_tweet_ids ] })
             current_timestamp -= self._delta_secs 
         return { 'now' : now,

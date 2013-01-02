@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 '''
 Created on 27 dec. 2012
 
@@ -5,6 +6,8 @@ Created on 27 dec. 2012
 '''
 import argparse
 import ConfigParser
+import os
+import time
 
 from twisted.internet import reactor
 
@@ -22,7 +25,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     config = ConfigParser.ConfigParser()
     config.read(args.config)
-    
+
     store = TSStore(config)
     store.queries = [ q.strip() for q in config.get('timeseries','queries').split(',') ]
     

@@ -23,13 +23,14 @@ class Tweet(object):
                                                self.timestamp)
     @classmethod
     def parse(cls, data):
-        return Tweet(data['id_str'], 
+        t    = Tweet(data['id_str'], 
                      data['text'], 
                      data['from_user'], 
                      int(time.mktime(time.strptime(data['created_at'], 
                                                    '%a, %d %b %Y %H:%M:%S +0000'))),
                      [ h['text'] for h in data['entities']['hashtags'] ], 
                      data['geo'])
+        return t
     @classmethod
     def deserialize(cls, data):
         data = json.loads(data)
