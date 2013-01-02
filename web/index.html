@@ -103,7 +103,7 @@ d3.json("/?q=%23ratp&l=30", function(error, jsondata) {
       for(var t = 0; t < tweets.length; t++) {
         var hashtags = tweets[t].hashtags;
         for(var h = 0; h < hashtags.length; h++) {
-          tags[w] = "#"+hashtags[h];
+          tags[w] = "#"+hashtags[h].toLowerCase();
           w += 1;
         }
       }

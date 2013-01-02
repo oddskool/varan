@@ -11,10 +11,26 @@ from varan.tweet import Tweet
 
 class TSStore(object):
 
-    def __init__(self):
-        self._redis = Redis(db=1)
-        self._delta_secs = 20
-        self._expiration_delay_secs = 3600*24
+    def __init__(self, config):
+        self._redis = Redis(host=config.get('redis','host'), 
+                            port=int(config.get('redis','port')),
+                            db=int(config.get('redis','db')))
+        self._delta_secs = int(config.get('timeseries','delta_secs'))
+        self._expiration_delay_secs = int(eval(config.get('timeseries','expiration_delay_secs')))
+
+    def _queries_key(self):
+        return 'queries'
+    @property
+    def queries(self):
+        return self._redis.smembers(self._queries_key())
+    @queries.setter
+    def queries(self, values):
+        pipe = self._redis.pipeline()
+        pipe.delete(self._queries_key())
+        for v in values:
+            pipe.sadd(self._queries_key(),
+                      v)
+        return pipe.execute()
 
     def _interval_key(self, timestamp):
         return int(timestamp) - int(timestamp) % self._delta_secs
