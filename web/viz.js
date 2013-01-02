@@ -76,13 +76,20 @@ d3.json("/?q=%23ratp&l=20", function(error, jsondata) {
     var fill = d3.scale.category20();
 
     var tags = new Array();
+    var tags_count = {};
     var w = 0;
     for(var i = 0; i < ts_data.length; i++){
       var tweets = ts_data[i].tweets;
       for(var t = 0; t < tweets.length; t++) {
         var hashtags = tweets[t].hashtags;
         for(var h = 0; h < hashtags.length; h++) {
-          tags[w] = "#"+hashtags[h].toLowerCase();
+          ht = "#"+hashtags[h].toLowerCase();
+          if(tags_count.hasOwnProperty()){
+            tags_count[ht] += 1;
+            continue;
+          }
+          tags[w] = ht;
+          tags_count[ht] = 1;
           w += 1;
         }
       }
@@ -90,7 +97,7 @@ d3.json("/?q=%23ratp&l=20", function(error, jsondata) {
 
     d3.layout.cloud().size([300, 300])
         .words(tags.map(function(d) {
-          return {text: d, size: 10 + Math.random() * 90};
+          return {text: d, size: 10 + tags_count[d] * 90};
         }))
         .rotate(function() { return ~~(Math.random() * 2) * 90; })
         .font("Impact")
