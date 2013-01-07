@@ -15,8 +15,8 @@ class TSStore(object):
         self._redis = Redis(host=config.get('redis','host'), 
                             port=int(config.get('redis','port')),
                             db=int(config.get('redis','db')))
-        self._delta_secs = int(config.get('timeseries',
-                                          'delta_secs'))
+        self._delta_secs = int(eval(config.get('timeseries',
+                                               'delta_secs')))
         self._expiration_delay_secs = int(eval(config.get('timeseries',
                                                           'expiration_delay_secs')))
 
