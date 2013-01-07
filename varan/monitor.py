@@ -25,7 +25,7 @@ class Monitor(object):
         self.headers = { 'Connection':['close'],
                          'Accept':['application/json'],
                          'User-Agent':['varan %s - https://github.com/oddskool/varan - contact: oddskool+varan@gmail.com'%VERSION] }
-        self.looping_call_period = int(config.get('timeseries','delta_secs'))
+        self.looping_call_period = int(eval(config.get('timeseries','delta_secs')))
         self.store = store
 
     def start(self):
