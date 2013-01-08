@@ -38,9 +38,11 @@ sudo `which easy_install` pip
 Demo
 ----
 
+Launch the server:
 ```shell
 PYTHONPATH=. python -m varan.server -c conf/ratp.conf
 ```
+Then point your brower to `http://localhost:8989/web/index.html`
 
 Stability
 ---------
