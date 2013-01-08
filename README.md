@@ -8,11 +8,32 @@ varan is a python server performing real time monitoring of twitter entities.
 
 Features
 --------
-* realtime monitoring of a configured number of twitter entities (e.g. hashtags)
+* realtime monitoring of twitter entities (e.g. hashtags)
 * configurable "realtime" meaning (up to the second for indexing, think 1-2 digit milliseconds for querying)
 * python library & server
 * very fast storage based on [redis](http://redis.io)
 * very fast web service based on [cyclone](http://cyclone.io)
+
+Dependencies
+------------
+* python 2.7+ with
+  * cyclone 1.0+
+  * redis 2.7+
+* redis 2.2+
+
+On Ubuntu 12.x it is recommended to setup your box like this:
+
+```shell
+sudo apt-get install redis-server
+sudo `which pip` install cyclone redis #cyclone is not packaged for apt/Ubuntu yet.
+```
+
+In case you don't have `pip` installed, you can:
+```shell
+wget http://pypi.python.org/packages/2.7/s/setuptools/setuptools-0.6c11-py2.7.egg
+sudo bash setuptools-0.6c11-py2.7.egg
+sudo `which easy_install` pip
+```
 
 Demo
 ----
