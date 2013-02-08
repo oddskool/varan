@@ -32,7 +32,7 @@ var svg = d3.select("body")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
   ;
 
-d3.json("/?q=%23ratp&l=20", function(error, jsondata) {
+d3.json("/?q=*&l=20", function(error, jsondata) {
 
   var ts_data = jsondata['ts'];
 

@@ -3,10 +3,13 @@ Created on 2 janv. 2013
 
 @author: ediemert
 '''
+import time
+from operator import itemgetter
+
 import cyclone.web
+from cyclone.web import StaticFileHandler
 
 from varan import logger
-from cyclone.web import StaticFileHandler
 
 class DefaultHandler(cyclone.web.RequestHandler):
     def initialize(self, store):
@@ -19,9 +22,17 @@ class DefaultHandler(cyclone.web.RequestHandler):
             self.write('%s : %s'%(type(e),e))
             self.set_status(500)
     def _get(self):
-        query = self.get_argument('q','#ratp')
+        query = self.get_argument('q','*')
         limit = int(self.get_argument('l','20'))
-        results = self.store.retrieve(query, limit)
+        results = None
+        if query == '*':
+            tweets = []
+            for q in self.store.queries:
+                tweets.extend(self.store.retrieve(q, limit)['ts'])
+                #tweets.sort(key=itemgetter('id'))
+            results = { 'ts' : tweets, 'now' : int(time.time()) }
+        else:
+            results = self.store.retrieve(query, limit)
         self.write(results)
 
 class Application(cyclone.web.Application):
@@ -36,9 +47,8 @@ class Application(cyclone.web.Application):
                                          handlers)
     def log_request(self, handler):
         request_time = 1000.0 * handler.request.request_time()
-        logger.info('HTTP %s %s %s %s (%.2f ms)',
-                    handler.request.method,
-                    handler.request.uri,
+        logger.info('HTTP %s %s %s (%.2f ms)',
+                    handler._request_summary(),
                     handler.request.headers,
-                    handler.request.remote_ip,
+                    handler.get_status(),
                     request_time)
