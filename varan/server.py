@@ -6,8 +6,6 @@ Created on 27 dec. 2012
 '''
 import argparse
 import ConfigParser
-import os
-import time
 
 from twisted.internet import reactor
 
