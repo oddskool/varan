@@ -16,16 +16,16 @@ Features
 
 Dependencies
 ------------
-* python 2.7+ with
-  * cyclone 1.0+
-  * redis 2.7+
+* python 2.7+
 * redis 2.2+
+* [tweetstream](https://bitbucket.org/runeh/tweetstream/src)
 
 On Ubuntu 12.x it is recommended to setup your box like this:
 
 ```shell
 sudo apt-get install redis-server
-sudo `which pip` install cyclone redis #cyclone is not packaged for apt/Ubuntu yet.
+sudo `which pip` install -r requirements.txt
+hg clone https://bitbucket.org/runeh/tweetstream && cd tweetstream && python setup.py bdist_egg
 ```
 
 In case you don't have `pip` installed, you can:
@@ -40,7 +40,7 @@ Demo
 
 Launch the server:
 ```shell
-PYTHONPATH=. python -m varan.server -c conf/ratp.conf
+PYTHONPATH=../tweetstream/dist/*egg:. python -m varan.server -c conf/ratp.conf
 ```
 Then point your brower to `http://localhost:8989/web/index.html`
 
