@@ -20,17 +20,17 @@ class TSStore(object):
         self._expiration_delay_secs = int(eval(config.get('timeseries',
                                                           'expiration_delay_secs')))
 
-    def _queries_key(self):
+    def queries_key(self):
         return 'queries'
     @property
     def queries(self):
-        return self._redis.smembers(self._queries_key())
+        return self._redis.smembers(self.queries_key())
     @queries.setter
     def queries(self, values):
         pipe = self._redis.pipeline()
-        pipe.delete(self._queries_key())
+        pipe.delete(self.queries_key())
         for v in values:
-            pipe.sadd(self._queries_key(),
+            pipe.sadd(self.queries_key(),
                       v)
         return pipe.execute()
 

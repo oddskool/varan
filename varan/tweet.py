@@ -25,11 +25,11 @@ class Tweet(object):
     def parse(cls, data):
         t    = Tweet(data['id_str'], 
                      data['text'], 
-                     data['from_user'], 
+                     data['user']['screen_name'], 
                      int(time.mktime(time.strptime(data['created_at'], 
-                                                   '%a, %d %b %Y %H:%M:%S +0000'))),
+                                                   '%a %b %d %H:%M:%S +0000 %Y'))),
                      [ h['text'] for h in data['entities']['hashtags'] ], 
-                     data['geo'])
+                     data['coordinates'])
         return t
     @classmethod
     def deserialize(cls, data):

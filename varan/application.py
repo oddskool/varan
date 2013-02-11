@@ -4,7 +4,6 @@ Created on 2 janv. 2013
 @author: ediemert
 '''
 import time
-from operator import itemgetter
 
 import cyclone.web
 from cyclone.web import StaticFileHandler
@@ -24,15 +23,7 @@ class DefaultHandler(cyclone.web.RequestHandler):
     def _get(self):
         query = self.get_argument('q','*')
         limit = int(self.get_argument('l','20'))
-        results = None
-        if query == '*':
-            tweets = []
-            for q in self.store.queries:
-                tweets.extend(self.store.retrieve(q, limit)['ts'])
-                #tweets.sort(key=itemgetter('id'))
-            results = { 'ts' : tweets, 'now' : int(time.time()) }
-        else:
-            results = self.store.retrieve(query, limit)
+        results = self.store.retrieve(query, limit)
         self.write(results)
 
 class Application(cyclone.web.Application):
