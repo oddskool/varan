@@ -3,7 +3,6 @@ Created on 2 janv. 2013
 
 @author: ediemert
 '''
-import time
 
 import cyclone.web
 from cyclone.web import StaticFileHandler

@@ -13,7 +13,6 @@ from varan import logger, VERSION
 from varan.ts_store import TSStore
 from varan.stream import Stream
 from varan.application import Application
-from twisted.internet.threads import deferToThread
 
 parser = argparse.ArgumentParser(description='varan : realtime twitter monitoring')
 parser.add_argument('--config','-c', required=True)

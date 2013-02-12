@@ -9,7 +9,6 @@ from threading import Thread
 import tweetstream
 from varan import logger
 from varan.tweet import Tweet
-from pprint import pprint
 
 class Stream(Thread):
 
@@ -47,9 +46,10 @@ class Stream(Thread):
         while self.is_alive() and not self.should_stop:
             status = self.safe_listen()
             if status:
-                logger.info('got exception, will leave loop: %s',
-                            status)
-                return status
+                if type(status) == StopIteration:
+                    logger.warn('got stop loop message, exiting strem listener')
+                    return
+                logger.warn('got exception, will resume loop')
 
     def safe_listen(self):
         abnormal_exception = None
@@ -89,7 +89,6 @@ class Stream(Thread):
                                       self.user_password[1], 
                                       track=self._queries) as stream:
             for tweet_data in stream:
-                #logger.debug('raw tweet: <%s>',pprint(tweet_data))
                 tweet = Tweet.parse(tweet_data)
                 self.ts_store.append('*',tweet)
                 logger.info('got interesting tweet: %s', tweet)
@@ -97,7 +96,7 @@ class Stream(Thread):
                     logger.info('stop command detected')
                     break
         if self.should_stop or not self.is_alive():
-            raise Exception('should stop now !')
+            raise StopIteration('should stop now !')
 
 if __name__ == '__main__':
     import sys, ConfigParser
