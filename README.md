@@ -44,6 +44,8 @@ PYTHONPATH=../tweetstream/dist/*egg:. python -m varan.server -c conf/ratp.conf
 ```
 Then point your brower to `http://localhost:8989/web/index.html`
 
+Alternatively, you can see a nice monitoring of Paris urban transport [here](http://varan.komodo.re/web/index.html) (best viewed with Firefox)
+
 Stability
 ---------
 
