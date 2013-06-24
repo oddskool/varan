@@ -47,7 +47,7 @@ class Stream(Thread):
             status = self.safe_listen()
             if status:
                 if type(status) == StopIteration:
-                    logger.warn('got stop loop message, exiting strem listener')
+                    logger.warn('got stop loop message, exiting stream listener')
                     return
                 logger.warn('got exception, will resume loop')
 
@@ -84,13 +84,20 @@ class Stream(Thread):
             logger.info("will sleep %s secs",self.wait_secs)
             time.sleep(self.wait_secs)
 
+    def is_interesting_tweet(self, tweet):
+        if len(set(tweet.hashtags) & set(self._queries)):
+            return True
+        return False
+
     def listen_stream(self):
         with tweetstream.FilterStream(self.user_password[0], 
                                       self.user_password[1], 
                                       track=self._queries) as stream:
             for tweet_data in stream:
                 tweet = Tweet.parse(tweet_data)
-                self.ts_store.append('*',tweet)
+                logger.info('got candidate tweet: %s', tweet.hashtags)
+                if self.is_interesting_tweet(tweet):
+                    self.ts_store.append('*',tweet)
                 logger.info('got interesting tweet: %s', tweet)
                 if self.should_stop or not self.is_alive():
                     logger.info('stop command detected')
